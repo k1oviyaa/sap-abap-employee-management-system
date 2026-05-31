@@ -1,0 +1,20 @@
+REPORT zsalary_report.
+
+DATA: it_emp TYPE TABLE OF zemployeems,
+      avg   TYPE i,
+      maxs  TYPE i,
+      mins  TYPE i.
+
+SELECT * FROM zemployeems INTO TABLE it_emp.
+
+CALL FUNCTION 'Z_EMP_SALARY_STATS'
+  EXPORTING
+    it_emp = it_emp
+  IMPORTING
+    ev_avg_salary = avg
+    ev_max_salary = maxs
+    ev_min_salary = mins.
+
+WRITE: / 'Average Salary:', avg.
+WRITE: / 'Highest Salary:', maxs.
+WRITE: / 'Lowest Salary:', mins.

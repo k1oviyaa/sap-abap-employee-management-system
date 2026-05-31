@@ -1,0 +1,20 @@
+REPORT zdisplay_emp.
+
+DATA: it_emp TYPE TABLE OF zemployeeems,
+      wa_emp TYPE zemployeeems.
+
+SELECT * FROM zemployeeems INTO TABLE it_emp.
+
+IF it_emp IS INITIAL.
+  WRITE: / 'No records found.'.
+ELSE.
+  LOOP AT it_emp INTO wa_emp.
+    WRITE: / wa_emp-emp_id,
+             wa_emp-name,
+             wa_emp-department,
+             wa_emp-designation,
+             wa_emp-salary,
+             wa_emp-currency,
+             wa_emp-join_date.
+  ENDLOOP.
+ENDIF.

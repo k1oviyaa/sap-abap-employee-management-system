@@ -1,0 +1,8 @@
+MANDT        CLNT(3)      Client
+EMP_ID       NUMC(5)      Employee ID
+EMP_NAME     CHAR(30)     Employee Name
+DEPARTMENT   CHAR(20)     Employee Department
+DESIGNATION  CHAR(20)     Employee Designation
+SALARY       CURR(10,2)   Employee Salary
+JOIN_DATE    DATS(8)      Join Date
+CURRENCY     CUKY(5)      Currency Key

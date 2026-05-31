@@ -1,0 +1,43 @@
+REPORT ZALV_EMP.
+TYPE-POOLS: slis.
+DATA: it_emp   TYPE STANDARD TABLE OF zemployeems,
+      wa_emp   TYPE zemployeems,
+      it_fcat  TYPE slis_t_fieldcat_alv,
+      wa_fcat  TYPE slis_fieldcat_alv.
+
+* Fetch Employee Data
+SELECT *
+  FROM zemployeems
+  INTO TABLE it_emp.
+IF sy-subrc <> 0.
+  WRITE: / 'No employee records found'.
+  EXIT.
+ENDIF.
+* Build Field Catalog
+DEFINE add_field.
+  CLEAR wa_fcat.
+  wa_fcat-fieldname = &1.
+  wa_fcat-tabname   = 'ZEMPLOYEE'.
+  wa_fcat-seltext_m = &2.
+  APPEND wa_fcat TO it_fcat.
+END-OF-DEFINITION.
+add_field 'EMP_ID'      'Emp ID'.
+add_field 'EMP_NAME'    'Employee Name'.
+add_field 'DEPARTMENT'  'Department'.
+add_field 'DESIGNATION' 'Designation'.
+add_field 'SALARY'      'Salary'.
+add_field 'JOIN_DATE'   'Join Date'.
+* Display ALV
+CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
+  EXPORTING
+    i_structure_name = 'ZEMPLOYEE'
+    it_fieldcat      = it_fcat
+  TABLES
+    t_outtab         = it_emp
+  EXCEPTIONS
+    program_error    = 1
+    OTHERS           = 2.
+
+IF sy-subrc <> 0.
+  WRITE: / 'Error displaying ALV report'.
+ENDIF.
