@@ -29,9 +29,6 @@ Covers database design, CRUD operations, ALV reporting, and function modules for
 ![ALV Report](SCREENSHOTS/alv_report.png)
 ![Salary Report](SCREENSHOTS/salary_report.png)
 
-### 🔹 Function Module
-![FM Code](SCREENSHOTS/fm_code.png)
-
 
 ## 🚀 How to Run
 1. Import programs into SAP system via SE38.
