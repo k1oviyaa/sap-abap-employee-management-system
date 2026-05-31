@@ -1,0 +1,23 @@
+REPORT zinsert_emp.
+
+DATA : wa TYPE zemployeems.
+
+wa-emp_id      = '00006'.
+wa-emp_name    = 'Kaviya'.
+wa-department  = 'IT'.
+wa-designation = 'Developer'.
+wa-salary      = '5000'.
+wa-join_date   = '20240101'.
+ENHANCEMENT-POINT ZEMP_SALARY_POINT SPOTS ZEMP_SALARY_SPOT .
+IF wa-salary < 10000.
+  MESSAGE 'Salary must be atleast 10,000!'
+          TYPE 'E'.
+  RETURN.
+ENDIF.
+INSERT zemployeems FROM wa.
+
+IF sy-subrc = 0.
+  WRITE : / 'employee inserted successfully'.
+ELSE.
+  WRITE : / 'insertion failed'.
+ENDIF.
