@@ -16,21 +16,22 @@ Covers database design, CRUD operations, ALV reporting, and function modules for
 
 ## 📸 Screenshots
 ### 🔹 Database Design
-![Table Definition](screenshots/table_definition.png)
+![Table Definition](SCREENSHOTS/table_definition.png)
 
 ### 🔹 CRUD Operations
-![Insert Success](screenshots/insert_success.png)
-![Employee Display](screenshots/display_emp.png)
+![Insert Success](SCREENSHOTS/insert_success.png)
+![Employee Display](SCREENSHOTS/display_emp.png)
 
 ### 🔹 Interactive Selection Screen
-![Selection Screen](screenshots/selection_screen.png)
+![Selection Screen](SCREENSHOTS/selection_screen.png)
 
 ### 🔹 Reporting
-![ALV Report](screenshots/alv_report.png)
-![Salary Report](screenshots/salary_report.png)
+![ALV Report](SCREENSHOTS/alv_report.png)
+![Salary Report](SCREENSHOTS/salary_report.png)
 
 ### 🔹 Function Module
-![FM Code](screenshots/fm_code.png)
+![FM Code](SCREENSHOTS/fm_code.png)
+
 
 ## 🚀 How to Run
 1. Import programs into SAP system via SE38.
