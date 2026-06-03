@@ -1,0 +1,38 @@
+*&---------------------------------------------------------------------*
+*& Report ZDELETE_EMP
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZDELETE_EMP.
+PARAMETERS:
+  p_id   TYPE zov_empid_e OBLIGATORY,
+  p_conf TYPE c LENGTH 1 DEFAULT 'N'.
+
+START-OF-SELECTION.
+  DATA wa TYPE zemployeems.
+  SELECT SINGLE * FROM zemployeems
+    INTO wa
+    WHERE emp_id = p_id.
+  IF sy-subrc <> 0.
+    MESSAGE 'No employee found with this ID.' TYPE 'W'.
+    RETURN.
+  ENDIF.
+
+  WRITE: / 'Record found:'.
+  WRITE: / 'ID         :', wa-emp_id.
+  WRITE: / 'Name       :', wa-emp_name.
+  WRITE: / 'Department :', wa-department.
+  WRITE: / 'Designation:', wa-designation.
+  WRITE: / 'Salary     :', wa-salary.
+  SKIP.
+  IF p_conf <> 'Y'.
+    WRITE: / '>> Enter Y in Confirm field and re-run to delete.'.
+    RETURN.
+  ENDIF.
+  DELETE FROM zemployeems WHERE emp_id = p_id.
+
+  IF sy-subrc = 0.
+    MESSAGE 'Employee deleted successfully.' TYPE 'S'.
+  ELSE.
+    MESSAGE 'Delete failed!' TYPE 'E'.
+  ENDIF.

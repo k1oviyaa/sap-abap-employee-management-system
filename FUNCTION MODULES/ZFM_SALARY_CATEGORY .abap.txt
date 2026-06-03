@@ -1,0 +1,22 @@
+FUNCTION ZFM_SALARY_CATEGORY.
+*"----------------------------------------------------------------------
+*"*"Local Interface:
+*"  IMPORTING
+*"     REFERENCE(IV_SALARY) TYPE  ZOV_SAL_E
+*"  EXPORTING
+*"     REFERENCE(EV_CATEGORY) TYPE  CHAR20
+*"----------------------------------------------------------------------
+
+
+  IF iv_salary >= 50000.
+    ev_category = 'HIGH SALARY'.
+
+  ELSEIF iv_salary >= 25000.
+    ev_category = 'AVERAGE SALARY'.
+
+  ELSE.
+    ev_category = 'LOW SALARY'.
+
+  ENDIF.
+
+ENDFUNCTION.

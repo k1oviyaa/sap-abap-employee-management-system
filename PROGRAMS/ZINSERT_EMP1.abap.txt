@@ -1,0 +1,37 @@
+REPORT zinsert_emp1.
+
+PARAMETERS:
+  p_id    TYPE zov_empid_e  OBLIGATORY,
+  p_name  TYPE zov_name_e   OBLIGATORY,
+  p_dept  TYPE zov_dept_e   OBLIGATORY,
+  p_desig TYPE zov_desig_e  OBLIGATORY,
+  p_sal   TYPE zov_sal_e    OBLIGATORY,
+  p_curr  TYPE waers DEFAULT 'INR',
+  p_date  TYPE zov_date_e DEFAULT sy-datum.
+
+AT SELECTION-SCREEN.
+  DATA lv_id TYPE zov_empid_e.
+  SELECT SINGLE emp_id FROM zemployeems
+    INTO lv_id
+    WHERE emp_id = p_id.
+  IF sy-subrc = 0.
+    MESSAGE 'Employee ID already exists!' TYPE 'E'.
+  ENDIF.
+
+START-OF-SELECTION.
+  DATA wa TYPE zemployeems.
+
+  wa-emp_id      = p_id.
+  wa-emp_name    = p_name.
+  wa-department  = p_dept.
+  wa-designation = p_desig.
+  wa-salary      = p_sal.
+  wa-currency    = p_curr.
+  wa-join_date   = p_date.
+INSERT zemployeems FROM wa.
+
+  IF sy-subrc = 0.
+    MESSAGE 'Employee inserted successfully!' TYPE 'S'.
+  ELSE.
+    MESSAGE 'Insert failed!' TYPE 'E'.
+  ENDIF.

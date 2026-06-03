@@ -1,20 +1,52 @@
+*&---------------------------------------------------------------------*
+*& Report ZDISPLAY_EMP
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
 REPORT zdisplay_emp.
 
-DATA: it_emp TYPE TABLE OF zemployeeems,
-      wa_emp TYPE zemployeeems.
+DATA: it_emp TYPE TABLE OF zemployeems,
+      wa_emp TYPE zemployeems.
 
-SELECT * FROM zemployeeems INTO TABLE it_emp.
+SELECT-OPTIONS:
+  s_id   FOR wa_emp-emp_id,
+  s_dept FOR wa_emp-department,
+  s_sal  FOR wa_emp-salary,
+  s_date FOR wa_emp-join_date.
 
-IF it_emp IS INITIAL.
-  WRITE: / 'No records found.'.
-ELSE.
+START-OF-SELECTION.
+  SELECT * FROM zemployeems
+    INTO TABLE it_emp
+    WHERE emp_id     IN s_id
+      AND department IN s_dept
+      AND salary     IN s_sal
+      AND join_date  IN s_date.
+
+  IF it_emp IS INITIAL.
+    MESSAGE 'No records match the filters.' TYPE 'W'.
+    RETURN.
+  ENDIF.
+
+* Column headers
+  WRITE: /5  'Emp ID',
+         20  'Name',
+         42  'Department',
+         60  'Designation',
+         78  'Salary',
+         90  'Currency',
+         100 'Join Date'.
+  ULINE.
+
+* Display employee data
   LOOP AT it_emp INTO wa_emp.
-    WRITE: / wa_emp-emp_id,
-             wa_emp-name,
-             wa_emp-department,
-             wa_emp-designation,
-             wa_emp-salary,
-             wa_emp-currency,
-             wa_emp-join_date.
+    WRITE: /5   wa_emp-emp_id,
+           20   wa_emp-emp_name,
+           42   wa_emp-department,
+           60   wa_emp-designation,
+           78   wa_emp-salary,
+           90   wa_emp-currency,
+           100  wa_emp-join_date.
   ENDLOOP.
-ENDIF.
+
+  SKIP.
+  WRITE: / 'Total records:', sy-dbcnt.

@@ -1,43 +1,58 @@
-REPORT ZALV_EMP.
+REPORT zalv_emp.
 TYPE-POOLS: slis.
-DATA: it_emp   TYPE STANDARD TABLE OF zemployeems,
-      wa_emp   TYPE zemployeems,
-      it_fcat  TYPE slis_t_fieldcat_alv,
-      wa_fcat  TYPE slis_fieldcat_alv.
 
-* Fetch Employee Data
-SELECT *
-  FROM zemployeems
-  INTO TABLE it_emp.
-IF sy-subrc <> 0.
-  WRITE: / 'No employee records found'.
-  EXIT.
-ENDIF.
-* Build Field Catalog
-DEFINE add_field.
-  CLEAR wa_fcat.
-  wa_fcat-fieldname = &1.
-  wa_fcat-tabname   = 'ZEMPLOYEE'.
-  wa_fcat-seltext_m = &2.
-  APPEND wa_fcat TO it_fcat.
-END-OF-DEFINITION.
-add_field 'EMP_ID'      'Emp ID'.
-add_field 'EMP_NAME'    'Employee Name'.
-add_field 'DEPARTMENT'  'Department'.
-add_field 'DESIGNATION' 'Designation'.
-add_field 'SALARY'      'Salary'.
-add_field 'JOIN_DATE'   'Join Date'.
-* Display ALV
-CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
-  EXPORTING
-    i_structure_name = 'ZEMPLOYEE'
-    it_fieldcat      = it_fcat
-  TABLES
-    t_outtab         = it_emp
-  EXCEPTIONS
-    program_error    = 1
-    OTHERS           = 2.
+DATA: it_emp  TYPE STANDARD TABLE OF zemployeems,
+      it_fcat TYPE slis_t_fieldcat_alv,
+      wa_fcat TYPE slis_fieldcat_alv,
+      it_sort TYPE slis_t_sortinfo_alv,
+      wa_sort TYPE slis_sortinfo_alv,
+      gs_lay  TYPE slis_layout_alv.
 
-IF sy-subrc <> 0.
-  WRITE: / 'Error displaying ALV report'.
-ENDIF.
+START-OF-SELECTION.
+  SELECT * FROM zemployeems INTO TABLE it_emp.
+
+  IF it_emp IS INITIAL.
+    MESSAGE 'No records found.' TYPE 'W'.
+    RETURN.
+  ENDIF.
+
+  DEFINE add_field.
+    CLEAR wa_fcat.
+    wa_fcat-fieldname = &1.
+    wa_fcat-tabname   = 'IT_EMP'.
+    wa_fcat-seltext_m = &2.
+    wa_fcat-outputlen = &3.
+    APPEND wa_fcat TO it_fcat.
+  END-OF-DEFINITION.
+
+  add_field 'EMP_ID'      'Emp ID'      8.
+  add_field 'EMP_NAME'    'Name'        20.
+  add_field 'DEPARTMENT'  'Department'  15.
+  add_field 'DESIGNATION' 'Designation' 15.
+  add_field 'SALARY'      'Salary'      12.
+  add_field 'CURRENCY'    'Curr'        5.
+  add_field 'JOIN_DATE'   'Join Date'   10.
+
+  wa_sort-fieldname = 'SALARY'.
+  wa_sort-tabname   = 'IT_EMP'.
+  wa_sort-down      = 'X'.
+  APPEND wa_sort TO it_sort.
+
+  gs_lay-zebra             = 'X'.
+  gs_lay-colwidth_optimize = 'X'.
+
+  CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
+    EXPORTING
+      it_fieldcat        = it_fcat
+      it_sort            = it_sort
+      is_layout          = gs_lay
+      i_callback_program = sy-repid
+    TABLES
+      t_outtab           = it_emp
+    EXCEPTIONS
+      program_error      = 1
+      OTHERS             = 2.
+
+  IF sy-subrc <> 0.
+    MESSAGE 'Error displaying ALV.' TYPE 'E'.
+  ENDIF.

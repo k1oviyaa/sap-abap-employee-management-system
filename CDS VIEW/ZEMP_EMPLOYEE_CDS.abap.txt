@@ -1,23 +1,22 @@
-REPORT zinsert_emp.
+@AbapCatalog.sqlViewName: 'ZEMP_EMP_V1'
+@AbapCatalog.viewEnhancementCategory: [#NONE]
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'CDS View for Employee Management'
+@Metadata.ignorePropagatedAnnotations: true
+define view ZEMP_EMPLOYEE_CDS
+    as select from zemployeeems
+{
+    //Employee Key Fields
+    key emp_id        as EmployeeID,
+    emp_name          as EmployeeName,
+    department        as Department,
+    designation       as Designation,
 
-DATA : wa TYPE zemployeems.
+    //Salary Field
+    @Semantics.amount.currencyCode: 'Currency'
+    salary            as Salary,
+    currency          as Currency,
 
-wa-emp_id      = '00006'.
-wa-emp_name    = 'Kaviya'.
-wa-department  = 'IT'.
-wa-designation = 'Developer'.
-wa-salary      = '5000'.
-wa-join_date   = '20240101'.
-ENHANCEMENT-POINT ZEMP_SALARY_POINT SPOTS ZEMP_SALARY_SPOT .
-IF wa-salary < 10000.
-  MESSAGE 'Salary must be atleast 10,000!'
-          TYPE 'E'.
-  RETURN.
-ENDIF.
-INSERT zemployeems FROM wa.
-
-IF sy-subrc = 0.
-  WRITE : / 'employee inserted successfully'.
-ELSE.
-  WRITE : / 'insertion failed'.
-ENDIF.
+    //Date Field
+    join_date         as JoiningDate
+}

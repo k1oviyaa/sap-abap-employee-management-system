@@ -1,0 +1,37 @@
+*&---------------------------------------------------------------------*
+*& Report ZUPDATE_EMP
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZUPDATE_EMP.
+PARAMETERS:
+  p_id    TYPE zov_empid_e  OBLIGATORY,
+  p_name  TYPE zov_name_e,
+  p_dept  TYPE zov_dept_e,
+  p_desig TYPE zov_desig_e,
+  p_sal   TYPE zov_sal_e,
+  p_curr  TYPE waers.
+START-OF-SELECTION.
+  DATA wa TYPE zemployeems.
+
+  SELECT SINGLE * FROM zemployeems
+    INTO wa
+    WHERE emp_id = p_id.
+
+  IF sy-subrc <> 0.
+    MESSAGE 'Employee not found!' TYPE 'E'.
+    RETURN.
+  ENDIF.
+  IF p_name  IS NOT INITIAL. wa-emp_name    = p_name.  ENDIF.
+  IF p_dept  IS NOT INITIAL. wa-department  = p_dept.  ENDIF.
+  IF p_desig IS NOT INITIAL. wa-designation = p_desig. ENDIF.
+  IF p_sal   IS NOT INITIAL. wa-salary      = p_sal.   ENDIF.
+  IF p_curr  IS NOT INITIAL. wa-currency    = p_curr.  ENDIF.
+
+  UPDATE zemployeems FROM wa.
+
+  IF sy-subrc = 0.
+    MESSAGE 'Employee updated successfully!' TYPE 'S'.
+  ELSE.
+    MESSAGE 'Update failed!' TYPE 'E'.
+  ENDIF.
